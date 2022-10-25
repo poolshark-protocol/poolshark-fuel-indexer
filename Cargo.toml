@@ -1,0 +1,18 @@
+[package]
+name = "hello-indexer"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[lib]
+crate-type = ['cdylib']
+
+[dependencies]
+fuel-indexer = "0.1"
+fuel-indexer-macros = "0.1"
+fuel-tx = "0.9"
+fuels = "0.13"
+fuels-abigen-macro = "0.13"
+fuels-core = "0.13"
+getrandom = { version = "0.2", features = ["js"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }

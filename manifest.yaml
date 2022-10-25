@@ -1,0 +1,6 @@
+---
+namespace: concentrated_liquidity
+graphql_schema: schema.graphql
+module:
+  wasm:
+    poolshark_indexer.wasm

@@ -1,0 +1,113 @@
+type PoolDirectory {
+  # factory address
+  id: ID!
+  # amount of pools created
+  total_pools: BigInt!
+  # amoutn of transactions all time
+  txn_count: BigInt!
+  # current owner of the factory
+  owner: ID!
+}
+
+type Token {
+  # token address
+  id: ID!
+  # volume in token units
+  volume: BigDecimal!
+  # transactions across all pools that include this token
+  txn_count: BigInt!
+  # number of pools containing this token
+  pool_count: BigInt!
+}
+
+type Pool @entity {
+  # pool address
+  id: ID!
+  # token0
+  token0: Token!
+  # token1
+  token1: Token!
+  # fee amount
+  swap_fee: BigInt!
+  # in range liquidity
+  liquidity: BigInt!
+  # current price
+  sqrt_price: BigInt!
+  # token0 global fee growth
+  fee_growth_global0: BigInt!
+  # token1 global fee growth
+  fee_growth_global1: BigInt!
+  # token0 per token1
+  token0_price: BigDecimal!
+  # token1 per token0
+  token1_price: BigDecimal!
+  # current tick
+  nearest_tick: BigInt
+  # all time token0 swapped
+  token0_volume: BigDecimal!
+  # all time token1 swapped
+  token1_volume: BigDecimal!
+  # all time number of transactions
+  txn_count: BigInt!
+  # all time fees collected token0
+  collectedFeesToken0: BigDecimal!
+  # all time fees collected token1
+  collectedFeesToken1: BigDecimal!
+  # total token 0 across all ticks
+  totalValueLockedToken0: BigDecimal!
+  # total token 1 across all ticks
+  totalValueLockedToken1: BigDecimal!
+}
+
+type Tick @entity {
+  # format: <pool address>#<tick index>
+  id: ID!
+  # pool address
+  pool_address: String
+  # tick index
+  tick_index: BigInt!
+  # pointer to pool
+  pool: Pool!
+  # total liquidity pool has as tick lower or upper
+  liquidity_at_tick: BigInt!
+  # how much liquidity changes when tick crossed
+  liquidity_delta: BigInt!
+  # lifetime volume of token0 with this tick in range
+  token0_volume: BigDecimal!
+  # lifetime volume of token1 with this tick in range
+  token1_volume: BigDecimal!
+}
+
+type Position @entity {
+  # sender + pool_address + upper_index + lower_index + txn_hash
+  id: ID!
+  # owner of the NFT
+  owner: Bytes!
+  # pool position is within
+  pool: Pool!
+  # allow indexing by tokens
+  token0: Token!
+  # allow indexing by tokens
+  token1: Token!
+  # lower tick of the position
+  lower_index: Tick!
+  # upper tick of the position
+  upper_index: Tick!
+  # total position liquidity
+  liquidity: BigInt!
+  # amount of token 0 ever deposited to position
+  token0_deposited_amount: BigDecimal!
+  # amount of token 1 ever deposited to position
+  token1_deposited_amount: BigDecimal!
+  # amount of token 0 ever withdrawn from position (without fees)
+  token0_withdrawn_amount: BigDecimal!
+  # amount of token 1 ever withdrawn from position (without fees)
+  token1_withdrawn_amount: BigDecimal!
+  # all time collected fees in token0
+  token0_fees_collected: BigDecimal!
+  # all time collected fees in token1
+  token1_fees_collected: BigDecimal!
+  # vars needed for fee computation
+  fee_growth_inside0_last: BigInt!
+  fee_growth_insde1_last: BigInt!
+}

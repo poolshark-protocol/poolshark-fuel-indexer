@@ -1,0 +1,28 @@
+[
+    {
+        "type":"contract",
+        "inputs":[
+            {
+                "name": "init",
+                "type": "struct InitEvent",
+                "components":
+                [
+                    {
+                        "name":"contract",
+                        "type":"b256"
+                    },
+                    {
+                        "name":"token0",
+                        "type":"b256"
+                    },
+                    {
+                        "name":"token1",
+                        "type":"b256"
+                    }
+                ]
+            }
+        ],
+        "name":"takes_struct",
+        "outputs":[]
+    }
+]
