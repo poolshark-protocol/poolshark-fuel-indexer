@@ -9,93 +9,33 @@ wasm_abigen!(
 );
 
 #[handler]
-fn handle_init(event: SwapEvent) {
-    Logger::info("Callin' the event handler");
-    let LogEvent {
-        contract,
-        event_id,
-        count,
+fn handle_init(event: InitEvent) {
+    Logger::info("Pool initialized.");
+    let InitEvent {
+        contract_id,
+        token0,
+        token1,
+        swap_fee,
+        tick_spacing,
+        init_price_lower,
+        init_price_upper,
+        init_tick
     } = event;
 
-    let mut t1 = match EventCount::load(event_id) {
+    let mut pool = match Pool::load(contract_id) {
         Some(t) => t,
-        None => EventCount {
-            id: event_id,
-            account: Address::from(contract),
-            count: 0,
+        None => Pool {
+            id: 0,
+            token0: ContractId::from(token0),
+            token1: ContractId::from(token1),
+            swap_fee: swap_fee,
+            liquidity: U128::from(0,0),
+            sqrt_price: Q64x64::from(init_price_upper, init_price_lower),
+            fee_growth_global0: Q64x64::from(0,0),
+            fee_growth_global1: Q64x64::from(0,0),
+            nearest_tick: I24::from(init_tick)
         },
     };
 
-    t1.count += count;
-
-    t1.save();
-}
-
-#[handler]
-fn handle_swap(event: SwapEvent) {
-    Logger::info("Callin' the event handler");
-    let LogEvent {
-        contract,
-        event_id,
-        count,
-    } = event;
-
-    let mut t1 = match EventCount::load(event_id) {
-        Some(t) => t,
-        None => EventCount {
-            id: event_id,
-            account: Address::from(contract),
-            count: 0,
-        },
-    };
-
-    t1.count += count;
-
-    t1.save();
-}
-
-#[handler]
-fn handle_mint(event: SwapEvent) {
-    Logger::info("Callin' the event handler");
-    let LogEvent {
-        contract,
-        event_id,
-        count,
-    } = event;
-
-    let mut t1 = match EventCount::load(event_id) {
-        Some(t) => t,
-        None => EventCount {
-            id: event_id,
-            account: Address::from(contract),
-            count: 0,
-        },
-    };
-
-    t1.count += count;
-
-    t1.save();
-}
-
-#[handler]
-fn handle_burn(event: SwapEvent) {
-    Logger::info("Callin' the event handler");
-    let LogEvent {
-        contract,
-        event_id,
-        count,
-    } = event;
-
-    let mut t1 = match EventCount::load(event_id) {
-        Some(t) => t,
-        None => EventCount {
-            id: event_id,
-            account: Address::from(contract),
-            count: 0,
-        },
-    };
-
-    t1.count += count;
-
-    t1.save();
+    pool.save();
 }

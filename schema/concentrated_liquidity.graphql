@@ -1,4 +1,16 @@
-type PoolDirectory {
+schema {
+  query: QueryRoot
+}
+
+type QueryRoot {
+  directory: Directory
+  tokens: [Token!]!
+  pools: [Pool!]!
+  ticks: [Tick!]!
+  positions: [Position!]!
+}
+
+type Directory {
   # factory address
   id: ID!
   # amount of pools created
@@ -21,12 +33,12 @@ type Token {
 }
 
 type Pool @entity {
-  # pool address
+  # pool address Zz
   id: ID!
   # token0
-  token0: Token!
+  token0: ContractId!
   # token1
-  token1: Token!
+  token1: ContractId!
   # fee amount
   swap_fee: BigInt!
   # in range liquidity
@@ -37,26 +49,8 @@ type Pool @entity {
   fee_growth_global0: BigInt!
   # token1 global fee growth
   fee_growth_global1: BigInt!
-  # token0 per token1
-  token0_price: BigDecimal!
-  # token1 per token0
-  token1_price: BigDecimal!
   # current tick
   nearest_tick: BigInt
-  # all time token0 swapped
-  token0_volume: BigDecimal!
-  # all time token1 swapped
-  token1_volume: BigDecimal!
-  # all time number of transactions
-  txn_count: BigInt!
-  # all time fees collected token0
-  collectedFeesToken0: BigDecimal!
-  # all time fees collected token1
-  collectedFeesToken1: BigDecimal!
-  # total token 0 across all ticks
-  totalValueLockedToken0: BigDecimal!
-  # total token 1 across all ticks
-  totalValueLockedToken1: BigDecimal!
 }
 
 type Tick @entity {
@@ -78,31 +72,19 @@ type Tick @entity {
   token1_volume: BigDecimal!
 }
 
-type Position @entity {
+type Position {
   # sender + pool_address + upper_index + lower_index + txn_hash
   id: ID!
-  # owner of the NFT
+  # owner of the Position
   owner: Bytes!
   # pool position is within
   pool: Pool!
-  # allow indexing by tokens
-  token0: Token!
-  # allow indexing by tokens
-  token1: Token!
   # lower tick of the position
   lower_index: Tick!
   # upper tick of the position
   upper_index: Tick!
   # total position liquidity
   liquidity: BigInt!
-  # amount of token 0 ever deposited to position
-  token0_deposited_amount: BigDecimal!
-  # amount of token 1 ever deposited to position
-  token1_deposited_amount: BigDecimal!
-  # amount of token 0 ever withdrawn from position (without fees)
-  token0_withdrawn_amount: BigDecimal!
-  # amount of token 1 ever withdrawn from position (without fees)
-  token1_withdrawn_amount: BigDecimal!
   # all time collected fees in token0
   token0_fees_collected: BigDecimal!
   # all time collected fees in token1
@@ -110,4 +92,18 @@ type Position @entity {
   # vars needed for fee computation
   fee_growth_inside0_last: BigInt!
   fee_growth_insde1_last: BigInt!
+}
+
+type Q64x64 {
+  integer: u64
+  decimal: u64
+}
+
+type U128 {
+  upper: u64
+  lower: u64
+}
+
+type I24 {
+  value: u32
 }
