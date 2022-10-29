@@ -40,70 +40,66 @@ type Pool @entity {
   # token1
   token1: ContractId!
   # fee amount
-  swap_fee: BigInt!
+  swap_fee: UInt8!
   # in range liquidity
-  liquidity: BigInt!
+  liquidity: U128!
   # current price
-  sqrt_price: BigInt!
+  sqrt_price: Q64x64!
   # token0 global fee growth
-  fee_growth_global0: BigInt!
+  fee_growth_global0: Q64x64!
   # token1 global fee growth
-  fee_growth_global1: BigInt!
+  fee_growth_global1: Q64x64!
   # current tick
-  nearest_tick: BigInt
+  nearest_tick: I24!
 }
 
-type Tick @entity {
+type Tick {
   # format: <pool address>#<tick index>
   id: ID!
   # pool address
-  pool_address: String
+  pool: Pool!
   # tick index
-  tick_index: BigInt!
+  tick_index: I24!
   # pointer to pool
   pool: Pool!
   # total liquidity pool has as tick lower or upper
-  liquidity_at_tick: BigInt!
+  liquidity_at_tick: U128
   # how much liquidity changes when tick crossed
-  liquidity_delta: BigInt!
-  # lifetime volume of token0 with this tick in range
-  token0_volume: BigDecimal!
-  # lifetime volume of token1 with this tick in range
-  token1_volume: BigDecimal!
+  liquidity_delta: U128
 }
 
 type Position {
   # sender + pool_address + upper_index + lower_index + txn_hash
   id: ID!
   # owner of the Position
-  owner: Bytes!
+  owner: Identity!
   # pool position is within
   pool: Pool!
   # lower tick of the position
-  lower_index: Tick!
+  lower_index: I24!
   # upper tick of the position
-  upper_index: Tick!
+  upper_index: I24!
   # total position liquidity
-  liquidity: BigInt!
+  liquidity: U128!
   # all time collected fees in token0
-  token0_fees_collected: BigDecimal!
+  token0_fees_collected: UInt8!
   # all time collected fees in token1
-  token1_fees_collected: BigDecimal!
+  token1_fees_collected: UInt8!
   # vars needed for fee computation
-  fee_growth_inside0_last: BigInt!
-  fee_growth_insde1_last: BigInt!
+  fee_growth_inside0_last: Q64x64!
+  fee_growth_insde1_last: Q64x64!
 }
 
 type Q64x64 {
-  integer: u64
-  decimal: u64
+  integer: UInt8!
+  decimal: UInt8!
 }
 
 type U128 {
-  upper: u64
-  lower: u64
+  upper: UInt8!
+  lower: UInt8!
 }
 
 type I24 {
-  value: u32
+  value: UInt4!
 }
